@@ -2,40 +2,28 @@
 import json
 
 from .configs import *
-from .client import AiohttpClient
-from .models import Base, engine, User, UserReceipt, ReceiptBody
+from .client import HttpClient
+from .models import Base, engine, User, UserReceipt
+from .data_models import PydanticUser, PydanticReceipt, PydanticUserWithReceipts, ReceiptBody
 from logger import logger
 
-from typing import List
+from typing import NoReturn
 from pydantic import ValidationError
-from pydantic_sqlalchemy import sqlalchemy_to_pydantic
 from sqlalchemy.orm import sessionmaker
 
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker()
 
-PydanticUser = sqlalchemy_to_pydantic(User)
-PydanticReceipt = sqlalchemy_to_pydantic(UserReceipt)
-
-
-class PydanticUserWithReceipts(PydanticUser):
-    user_data: List[PydanticReceipt] = []
-
 
 class ReceiptVerifier:
     """ Auth and receipt verification instance."""
 
+    base_url = r'https://buy.itunes.apple.com/verifyReceipt'
+    sandbox_url = r'https://sandbox.itunes.apple.com/verifyReceipt'
+
     def __init__(self):
         self.session = Session(bind=engine)
-        self.client = AiohttpClient()
-
-    @property
-    def base_url(self):
-        return r'https://buy.itunes.apple.com/verifyReceipt'
-
-    @property
-    def sandbox_url(self):
-        return r'https://sandbox.itunes.apple.com/verifyReceipt'
+        self.client = HttpClient()
 
     async def __add_user(self, username: str, email: str, pwd: str) -> dict:
         """ Add user in database.
@@ -69,7 +57,7 @@ class ReceiptVerifier:
         except ValidationError as error:
             logger.error(error.json())
 
-    async def add_receipt(self, user_id: int, params: dict) -> None:
+    async def add_receipt(self, user_id: int, params: dict) -> NoReturn:
         """ Add receipt in database.
 
         :param user_id: user ID.

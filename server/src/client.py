@@ -5,8 +5,8 @@ import asyncio
 from aiohttp import ClientSession
 
 
-class AiohttpClient:
-    """ Aiohttp Client wrapper. """
+class HttpClient:
+    """ Async HTTP Client. """
 
     @staticmethod
     async def fetch(session, url: str, params: dict = None) -> dict:

@@ -1,11 +1,10 @@
-""" Module for creating ORM and Models instances. """
+""" Module for creating ORM. """
 import sqlalchemy as db
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
-from pydantic import BaseModel, Field
 
 from .configs import POSTGRES_USER, POSTGRES_DB, POSTGRES_PASSWORD
 
@@ -15,13 +14,6 @@ session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=en
 
 Base = declarative_base()
 Base.query = session.query_property()
-
-
-class ReceiptBody(BaseModel):
-    receipt_data: bytes = Field(alias='receipt-data')
-    exclude_transactions: bool = Field(alias='exclude-old-transactions')
-    sandbox: bool
-    password: str
 
 
 class UserReceipt(Base):
