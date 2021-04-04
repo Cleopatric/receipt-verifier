@@ -15,6 +15,13 @@ Base.metadata.create_all(bind=engine)
 Session = sessionmaker()
 
 
+class ValidationException(Exception):
+    """ Custom validation exception. """
+
+    def __init__(self, error_message: dict):
+        self.message = error_message
+
+
 class ReceiptVerifier:
     """ Auth and receipt verification instance."""
 
@@ -40,6 +47,7 @@ class ReceiptVerifier:
             return ADD_USER_MSG
         except Exception as error:
             logger.error(str(error))
+            return {'status': 'error', 'code': 500, 'message': str(error)}
 
     async def add_user(self, params: dict) -> dict:
         """ Check and add user for adding in database.
@@ -57,7 +65,7 @@ class ReceiptVerifier:
         except ValidationError as error:
             error_msg = error.json()
             logger.error(error_msg)
-            return {'code': 400, 'status': 'error', 'message': json.loads(error_msg)}
+            raise ValidationException({'status': 'error', 'message': json.loads(error_msg)})
 
     async def add_receipt(self, user_id: int, params: dict) -> NoReturn:
         """ Add receipt in database.
@@ -75,8 +83,10 @@ class ReceiptVerifier:
                                pending_renewal_info=parse.pending_renewal_info, status=parse.status)
             self.session.add(user)
             self.session.commit()
-        except Exception as error:
-            logger.error(str(error))
+        except ValidationError as error:
+            error_msg = error.json()
+            logger.error(error_msg)
+            raise ValidationException({'status': 'error', 'message': json.loads(error_msg)})
 
     async def get_receipt(self, params: dict, sandbox: bool = False) -> dict:
         """ Send a receipt to the AppStore for verification.
@@ -119,7 +129,9 @@ class ReceiptVerifier:
             response = await self.get_receipt(obj.json(by_alias=True), sandbox)
             return response
         except ValidationError as error:
-            return {'code': 400, 'status': 'error', 'message': json.loads(error.json())}
+            error_msg = error.json()
+            logger.error(error_msg)
+            raise ValidationException({'status': 'error', 'message': json.loads(error_msg)})
 
     async def verify_receipt(self, username: str, password: str, params: dict) -> dict:
         """ Send a receipt to the App Store for verification and add result in database.
