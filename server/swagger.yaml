@@ -1,0 +1,85 @@
+swagger: "2.0"
+info:
+  description: |
+    A simple service that allows you to verify receipts from the AppStore.
+  version: "1.0.0"
+  title: Receipt Verifier Service
+  termsOfService: example
+  license:
+    name: "@FLEX_MACH1NE"
+    url: http://t.me/FLEX_MACH1NE
+basePath: /api
+schemes:
+  - http
+securityDefinitions:
+  basicAuth:
+    type: basic
+paths:
+  /get_user_receipts:
+    get:
+      security:
+        - basicAuth: []
+      tags:
+        - Receipt Verifier
+      summary: Get user info
+      description: Returns all products response
+      produces:
+        - application/json
+
+  /sign_up:
+    post:
+      tags:
+        - Receipt Verifier
+      summary: Set new user
+      description: Returns a map of status codes to quantities
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Created user object
+          required: false
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: username
+              email:
+                type: string
+                example: email
+              password:
+                type: string
+                example: password
+
+  /verify_receipt:
+    post:
+      security:
+        - basicAuth: []
+      tags:
+        - Receipt Verifier
+      summary: Send a receipt to the App Store for verification.
+      description: "The JSON contents you submit with the request to the App Store."
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Created user object
+          required: false
+          schema:
+            type: object
+            properties:
+              receipt-data:
+                type: string
+                format: byte
+                example: receipt
+              password:
+                type: string
+                example: password
+              exclude-old-transactions:
+                type: string
+                example: false
+              sandbox:
+                type: string
+                example: false
