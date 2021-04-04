@@ -29,12 +29,6 @@ class UserReceipt(Base):
     receipt = db.Column(db.JSON, nullable=False)
     status = db.Column(db.Integer, nullable=False)
 
-    def __repr__(self):
-        return f'{self.user_id} - {self.receipt_data} - {self.status}'
-
-    def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
 
 class User(Base):
     __tablename__ = 'users'
@@ -44,9 +38,3 @@ class User(Base):
     email = db.Column(db.String(250), nullable=False)
     password = db.Column(db.String(100), nullable=False)
     user_data = relationship('UserReceipt', backref='user', lazy=True)
-
-    def __repr__(self):
-        return f'{self.id} - {self.name} - {self.email}'
-
-    def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}

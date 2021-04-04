@@ -1,4 +1,4 @@
-from views import api_root, get_user_receipts, sign_up, verify_receipt
+from .views import api_root, get_user_receipts, sign_up, verify_receipt
 
 
 def setup_routes(app):

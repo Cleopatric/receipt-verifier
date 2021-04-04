@@ -1,7 +1,7 @@
 from aiohttp import web
 from aiohttp_swagger import *
 
-from routes import setup_routes
+from src.routes import setup_routes
 
 if __name__ == '__main__':
     app = web.Application()
