@@ -22,6 +22,13 @@ class ValidationException(Exception):
         self.message = error_message
 
 
+class InsertValueException(Exception):
+    """ Custom insert exception for database. """
+
+    def __init__(self, error_message: dict):
+        self.message = error_message
+
+
 class ReceiptVerifier:
     """ Auth and receipt verification instance."""
 
@@ -47,7 +54,7 @@ class ReceiptVerifier:
             return ADD_USER_MSG
         except Exception as error:
             logger.error(str(error))
-            return {'status': 'error', 'code': 500, 'message': str(error)}
+            raise InsertValueException({'status': 'error', 'message': str(error)})
 
     async def add_user(self, params: dict) -> dict:
         """ Check and add user for adding in database.
