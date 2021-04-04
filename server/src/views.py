@@ -4,7 +4,7 @@ from aiohttp import web
 
 from aiohttp_basicauth import BasicAuthMiddleware
 
-from src.services import ReceiptVerifier
+from .services import ReceiptVerifier
 
 auth = BasicAuthMiddleware()
 service = ReceiptVerifier()
