@@ -55,7 +55,9 @@ class ReceiptVerifier:
                 return SIGN_UP_ERROR
             return await self.__add_user(user.name, user.email, user.password)
         except ValidationError as error:
-            logger.error(error.json())
+            error_msg = error.json()
+            logger.error(error_msg)
+            return {'code': 400, 'status': 'error', 'message': json.loads(error_msg)}
 
     async def add_receipt(self, user_id: int, params: dict) -> NoReturn:
         """ Add receipt in database.
