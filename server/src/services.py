@@ -15,18 +15,21 @@ Base.metadata.create_all(bind=engine)
 Session = sessionmaker()
 
 
-class ValidationException(Exception):
+class BaseServiceException(Exception):
+    """ Base exception instance. """
+
+    def __init__(self, error_message: dict):
+        self.message = error_message
+
+
+class ValidationException(BaseServiceException):
     """ Custom validation exception. """
-
-    def __init__(self, error_message: dict):
-        self.message = error_message
+    pass
 
 
-class InsertValueException(Exception):
+class InsertValueException(BaseServiceException):
     """ Custom insert exception for database. """
-
-    def __init__(self, error_message: dict):
-        self.message = error_message
+    pass
 
 
 class ReceiptVerifier:
