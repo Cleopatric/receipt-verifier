@@ -51,3 +51,41 @@ Service with simple authentication  for receipt validating in [App Store](https:
     ```sh
     docker-compose down
     ```
+    
+# Running tests
+1.  Open repository
+    ```sh
+    cd  receipt-verifier
+    ```
+    
+2. Set virtual environment:
+    ```sh
+    python3 -m venv venv
+    ```
+
+3. Activate virtual environment:
+    
+    MacOS/Linux
+    
+    ```sh
+    source venv/bin/activate
+    ```
+    
+    Windows
+    ```sh
+    venv\Scripts\activate
+    ```
+4. Install requirements:
+    ```sh
+      pip install -r requirements.txt
+    ```
+    
+5. Open tests repository:
+    ```sh
+     cd server/tests/
+    ```
+
+6. Run tests:
+    ```sh
+    pytest tests
+    ```
