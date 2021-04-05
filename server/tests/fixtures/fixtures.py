@@ -26,5 +26,5 @@ def error_msg(base_url, error_params) -> dict:
 
 
 @pytest.fixture(scope='module')
-def no_params_msg(base_url):
+def no_params_msg(base_url) -> dict:
     return get_response(base_url, {})
