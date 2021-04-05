@@ -77,7 +77,7 @@ class ReceiptVerifier:
             logger.error(error_msg)
             raise ValidationException({'status': 'error', 'message': json.loads(error_msg)})
         except TypeError as error:
-            raise ValidationException({'status':'error', 'message': str(error)})
+            raise ValidationException({'status': 'error', 'message': str(error)})
 
     async def add_receipt(self, user_id: int, params: dict) -> NoReturn:
         """ Add receipt in database.
@@ -99,6 +99,8 @@ class ReceiptVerifier:
             error_msg = error.json()
             logger.error(error_msg)
             raise ValidationException({'status': 'error', 'message': json.loads(error_msg)})
+        except TypeError as error:
+            raise ValidationException({'status': 'error', 'message': str(error)})
 
     async def get_receipt(self, params: dict, sandbox: bool = False) -> dict:
         """ Send a receipt to the AppStore for verification.
